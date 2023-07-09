@@ -2,47 +2,16 @@ import tkinter as tk
 import random
 
 from config import *
-
-class Snake:
-    """
-    The snake's body length and location
-    """
-    
-    def __init__(self):
-        self.body_size = BODY_PARTS
-        self.coordinates = []
-        self.squares = []
-        
-        # Creates the correct number of body segments
-        for i in range(0, BODY_PARTS):
-            self.coordinates.append([0,0])
-
-        # Creats the snake display
-        for x, y in self.coordinates:
-            square = canvas.create_rectangle(x, y, x + SPACE_SIZE, y + SPACE_SIZE, fill = SNAKE_COLOR, tag = "snake")
-            self.squares.append(square)
-
-class Food:
-    """
-    Creates a food object in a random location for the snake to eat.
-    """
-
-    def __init__(self):
-        
-        # randomizes location for new food
-        x = random.randint(0, (GAME_WIDTH / SPACE_SIZE) - 1) * SPACE_SIZE
-        y = random.randint(0, (GAME_HEIGHT / SPACE_SIZE) - 1) * SPACE_SIZE
-        self.coordinates = [x,y]
-        
-        # Displays the food on screen
-        canvas.create_oval(x,y,x + SPACE_SIZE, y + SPACE_SIZE, fill = FOOD_COLOR, tag = "food")
-        
+from snake import *
+from food import *
+from check_collisions import *
+from game_over import *
+#from change_direction import *
 
 def next_turn(snake, food):
-    """
-    Moves the snake body.
-    Makes necessary changes if food is eaten.
-    """
+    
+    # Moves the snake body.
+    # Makes necessary changes if food is eaten.
     
     x, y = snake.coordinates[0]
     
@@ -72,7 +41,7 @@ def next_turn(snake, food):
 
         # delete the food that was eaten and make new food
         canvas.delete("food")
-        food = Food()
+        food = Food(canvas)
 
     # if no food eaten then move snake normally
     else:
@@ -82,16 +51,15 @@ def next_turn(snake, food):
 
     # end game if snake ran into wall or itself
     if check_collisions(snake):
-        game_over()
+        game_over(canvas)
 
     else:
         window.after(SPEED, next_turn, snake, food)
 
 def change_direction(new_direction):
-    """
-    Uses user input to change snake direction.
-    Does not allow 180 degree turns.
-    """
+    
+    #Uses user input to change snake direction.
+    #Does not allow 180 degree turns.
 
     global direction
 
@@ -107,39 +75,6 @@ def change_direction(new_direction):
     if new_direction == 'down':
         if direction != 'up':
             direction = new_direction
-
-def check_collisions(snake):
-    """
-    Ends game if snake head runs into window border or snake body.
-    Returns 'True' if collision, 'False' if no collision.
-    """
-
-    x, y = snake.coordinates[0]
-
-    # if snake runs into game border
-    if x < 0 or x >= GAME_WIDTH:
-        print("GAME OVER")
-        return True
-    elif y < 0 or y >= GAME_HEIGHT:
-        print("GAME OVER")
-        return True
-
-    # if snake runs into itself
-    for body_part in snake.coordinates[1:]:
-        if x == body_part[0] and y == body_part[1]:
-            print("GAME_OVER")
-            return True
-
-    return False
-
-def game_over():
-    """
-    Ends game and displays 'Game Over' screen.
-    """
-
-    canvas.delete(tk.ALL)
-    canvas.create_text(canvas.winfo_width()/2, canvas.winfo_height()/2, font = ('consolas', 70),
-                       text = "GAME OVER", fill = "red", tag = "gameover")
 
 
 # Create game window with a fixed size
@@ -182,8 +117,8 @@ window.bind('<Up>', lambda event: change_direction('up'))
 window.bind('<Down>', lambda event: change_direction('down'))
 
 # Create snake and first food object
-snake = Snake()
-food = Food()
+snake = Snake(canvas)
+food = Food(canvas)
 
 next_turn(snake, food)
 
