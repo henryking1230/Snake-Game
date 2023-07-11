@@ -6,7 +6,6 @@ from snake import *
 from food import *
 from check_collisions import *
 from game_over import *
-#from change_direction import *
 
 def next_turn(snake, food):
     
