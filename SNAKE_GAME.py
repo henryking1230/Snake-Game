@@ -7,13 +7,14 @@ from food import *
 from check_collisions import *
 from game_over import *
 
+
 def next_turn(snake, food):
-    
+
     # Moves the snake body.
     # Makes necessary changes if food is eaten.
-    
+
     x, y = snake.coordinates[0]
-    
+
     # Move snake body in correct direction
     if direction == "up":
         y -= SPACE_SIZE
@@ -23,11 +24,12 @@ def next_turn(snake, food):
         x -= SPACE_SIZE
     elif direction == "right":
         x += SPACE_SIZE
-        
-    snake.coordinates.insert(0, (x,y))
-    
-    square = canvas.create_rectangle(x, y, x + SPACE_SIZE, y + SPACE_SIZE, fill = SNAKE_COLOR)
-    
+
+    snake.coordinates.insert(0, (x, y))
+
+    square = canvas.create_rectangle(
+        x, y, x + SPACE_SIZE, y + SPACE_SIZE, fill=SNAKE_COLOR)
+
     snake.squares.insert(0, square)
 
     # if the snake ran into food
@@ -55,10 +57,11 @@ def next_turn(snake, food):
     else:
         window.after(SPEED, next_turn, snake, food)
 
+
 def change_direction(new_direction):
-    
-    #Uses user input to change snake direction.
-    #Does not allow 180 degree turns.
+
+    # Uses user input to change snake direction.
+    # Does not allow 180 degree turns.
 
     global direction
 
@@ -90,7 +93,8 @@ label = tk.Label(window, text="Score:{}".format(score), font=('consolas', 50))
 label.pack()
 
 # Set background color and window size
-canvas = tk.Canvas(window, bg=BACKGROUND_COLOR, height=GAME_HEIGHT, width=GAME_WIDTH)
+canvas = tk.Canvas(window, bg=BACKGROUND_COLOR,
+                   height=GAME_HEIGHT, width=GAME_WIDTH)
 canvas.pack()
 
 window.update()
@@ -102,7 +106,7 @@ screen_height = window.winfo_screenheight()
 
 # Center the window on computer screen
 x = int((screen_width/2) - (window_width/2))
-y = int((screen_height/2) - (window_height/2))
+y = int((screen_height/3) - (window_height/2))
 window.geometry(f"{window_width}x{window_height}+{x}+{y}")
 
 # Define user inputs for changing direction of snake
